@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}" th:with="activeTab='free'">
+<head>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="py-5 text-center">
+        <h2>자유 게시판</h2>
+    </div>
+
+    <div class="container">
+
+        <div class="p-2 bd-highlight">
+            <a class="btn btn-outline-info" th:href="@{/board/free/write}">글쓰기</a>
+        </div>
+
+        <div class="table">
+            <table class="table table-striped" style="table-layout: fixed">
+                <thead>
+                <tr>
+                    <th style="width: 10%"> #</th>
+                    <th style="width: 30%"> 제목</th>
+                    <th style="width: 20%"> 닉네임</th>
+                    <th style="width: 10%"> 좋아요 수</th>
+                    <th style="width: 10%"> 조회수</th>
+                    <th style="width: 20%"> 작성일</th>
+                </tr>
+                </thead>
+
+                <tbody th:each="free : ${freeList}">
+                <tr>
+                    <td style="width: 10%"  th:text="${free.id}"></td>
+
+                    <td style="width: 90%">
+                        <a th:href="@{'/board/free/read/'+${free.id}}" th:value="${free.id}"
+                           style="text-decoration-line: none; color:black;">
+                            <span th:text="${free.title}"></span>
+                        </a>
+
+                    </td>
+
+
+                    <td style="width: 10%"  th:text="${free.write.nickname}"></td>
+                    <td style="width: 10%" about="" th:text="${free.likers.size()}"></td>
+                    <td style="width: 10%"  th:text="${free.hit}"></td>
+                    <td style="width: 20%"  th:text="${#temporals.format(free.createDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+       <div>
+           <nav aria-label="Page navigation example">
+               <ul class="pagination justify-content-center">
+                   <li class="page-item"
+                       th:classappend="${1 == freeList.pageable.pageNumber + 1} ? 'disabled'">
+                       <a class="page-link" href="#"
+                          th:href="@{/board/free(page=${freeList.pageable.pageNumber - 1})}"
+                          tabindex="-1" aria-disabled="true"> &lt; </a>
+                   </li>
+
+                   <li class="page-item"
+                       th:classappend="${i == freeList.pageable.pageNumber+1} ? 'active'"
+                       th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                       <a class="page-link" href="#"
+                          th:href="@{/board/free(page=${i - 1})}"
+                          th:text="${i}">1</a>
+                   </li>
+
+                   <li class="page-item"
+                       th:classappend="${freeList.totalPages == freeList.pageable.pageNumber + 1} ? 'disabled'">
+                       <a class="page-link" href="#"
+                          th:href="@{/board/free(page=${freeList.pageable.pageNumber + 1})}">
+                           &gt </a>
+                   </li>
+
+               </ul>
+           </nav>
+       </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script th:src="@{/board/report.js}"></script>
+
+
+</head>
+<body>
+
+<div style="position: relative; width: 80%; left: 15%;">
+
+    <span style="font-size: 120%">신고하기</span>
+
+    <hr>
+
+    <span style="color: lightgray">제목</span>&nbsp;&nbsp;
+    <span th:text="${post.title}"></span>
+    <br>
+    <span style="color: lightgray">작성자</span>&nbsp;&nbsp;
+    <span th:text="${post.write.nickname}"></span>
+    <hr>
+    <input type="hidden" th:value="${post.id}" th:id="postId">
+    <textarea th:id="reportText" style="width: 350px; height: 350px; font-size : 15px;"
+              placeholder="신고 할 내용을 입력하세요"></textarea>
+    <br>
+    <button type="button" style="color: #6c757d; border-color: lightgray; border-width: 2px; background-color: white;
+            width: 70px; height:35px; border-radius: 6px;" th:id="reportButton">신고하기
+    </button>
+
+</div>
+
+</body>
+</html>

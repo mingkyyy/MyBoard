@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}">
+<head>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+
+    <script th:src="@{/board/free-read.js}"></script>
+
+    <style>
+        .reportLink{
+            text-decoration-line : none;
+            color:black;
+        }
+
+        .updateButton {
+            color: #6c757d;
+            border-color: lightgray;
+            border-width: 2px;
+            background-color: white;
+            width: 60px;
+            border-radius: 6px;
+        }
+
+        .updateButton:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .reCommentButton {
+            color: #6c757d;
+            border-color: lightgray;
+            border-width: 2px;
+            background-color: white;
+            width: 60px;
+            border-radius: 6px;
+        }
+
+        .reCommentButton:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="justify-center-center">
+    <div style="position: relative; width: 70%; left: 15%; border: 1px solid black">
+        <div style="position: relative; width: 70%; left: 15%;">
+            <br><br>
+            <div th:text="${post.category}" style="color: lightgray"></div>
+            <div>
+                <span th:text="${post.title}" style="font-size: 30px;"></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span th:text="${post.write.nickname}"></span>
+                &nbsp;&nbsp;&nbsp;
+                <span th:text="조회수 +${post.hit}"></span>
+                &nbsp;&nbsp;&nbsp;
+                <span th:text="${#temporals.format(post.modifiedDate,'yyyy-MM-dd HH:mm:ss')}">
+                </span>
+            </div>
+
+            <span th:if="${post.write.id} == ${member.id}">
+                        <button type="button" th:id="deleteFree" th:value="${post.id}" class="deleteFree"
+                                style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+                <a th:href="@{'/board/free/update/'+${post.id}}">수정</a>
+                    </span>
+
+            <span th:if="${member.memberType.toString().equals('ROLE_MANAGE')}">
+            <button type="button" th:id="deleteFree" th:value="${post.id}" class="deleteFree"
+                    style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+            </span>
+            <hr>
+            <div th:utext="${post.content}">
+                <br><br>
+            </div>
+            <br>
+            <br>
+            <button type="button" class="like"
+                    style="border:0px; outline:0px;background-color:transparent;"
+                    th:id="like" th:value="${post.id}">
+
+                <img th:src="@{ ${member?.like?.contains(post)}  ?  '/images/like_red.svg' : '/images/like.svg'}"
+                     th:id="${post.id}" th:width="20" th:height="20">
+
+            </button>
+            <span th:text="${post.likers.size}" th:id="likeNum+${post.id}"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a th:class="reportLink" th:href="@{'/report/'+${post.id}}" onclick="window.open(this.href, '_blank','width = 500, height=500, scrollbars=yes '); return false;">신고하기</a>
+
+            <br>
+            <hr>
+
+
+            <!--            댓글-->
+            <div>
+                <img th:src="@{/images/comment.png}" th:width="18" th:height="18">
+                <span th:text="${commentList.size()}"></span>
+
+                <div class="input-group mb-3">
+                    <input type="hidden" th:value="${post.id}" th:id="postId">
+                    <input type="text" class="form-control" id="comment" name="comment" placeholder="댓글을 입력하세요">
+                    <button class="btn btn-outline-secondary" type="button" th:id="commentButton">작성</button>
+                </div>
+
+
+                <!-- 댓글 리스트-->
+                <th:block th:each="comment : ${commentList}" id="allcomment">
+
+                    <div th:if="${comment.parentComment} == -1" id="maincooment"
+                         style="margin-bottom: 18px; margin-top: 18px;">
+                        <span style="font-size: 18px; font-weight: 540;"
+                              th:text="${comment.commentWriter.nickname}"></span> &nbsp;&nbsp;&nbsp;
+                        <span style="color: lightgray"
+                              th:text="${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <input type="hidden" th:value="${comment.id}" th:id="hiddenComment">
+
+                        &nbsp;&nbsp;&nbsp;
+
+                        <!--  대댓글 달기-->
+                        <button class="reComment" type="button" style="font-size:12px;
+                                 background-color:black; border:0px; color:white; padding-left:10px; padding-right:10px; padding-top:3px; padding-bottom:3px;
+                                  margin-left:32px" th:value="${comment.id}" th:id="reComment + ${comment.id}">답글달기
+                        </button>
+                        &nbsp;
+
+                        <!-- 수정, 삭제-->
+                        <span th:if="${comment.commentWriter.id} == ${member.id}">
+                        <button type="button" th:id="deleteComment" th:value="${comment.id}" class="deleteComment"
+                                style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+                            &nbsp;|&nbsp;
+
+                           <button type="button" th:id="updateComment" th:value="${comment.id}" class="updateComment"
+                                   style="background-color: transparent; border: 0; outline: 0; color: red">수정</button>
+                    </span>
+
+                        <br>
+                        <span style="word-wrap:break-word;" th:text="${comment.comment}"
+                              th:id="commentText + ${comment.id}"></span>
+                    </div>
+
+                    <!--                    댓글 수정 폼-->
+                    <div class="input-group mb-3" style="display: none" th:id="updateDiv + ${comment.id}">
+                        <input type="text" class="form-control" th:value="${comment.comment}"
+                               th:id="commentUpdateValue + ${comment.id}" name="commentUpdate">
+                        <button class="updateButton" th:value="${comment.id}" type="button" th:id="commentUpdateButton">
+                            수정
+                        </button>
+                    </div>
+
+                    <!--  대댓글-->
+                    <th:block th:each="subComment : ${post.comments}">
+                        <div th:if="${subComment.parentComment} == ${comment.id}" style="margin-bottom: 10px;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 18px; font-weight: 540;"
+                                                                       th:text="${comment.commentWriter.nickname}"></span>
+                            &nbsp;&nbsp;&nbsp;  <span style="color: lightgray"
+                                                      th:text="${#temporals.format(comment.modifiedDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                            <input type="hidden" th:value="${comment.id}" th:id="hiddenComment">
+
+                            &nbsp;
+
+                            <!--                            대댓글 수정 삭제-->
+                            <span th:if="${comment.commentWriter.id} == ${member.id}">
+                        <button type="button" th:id="deleteComment" th:value="${subComment.id}" class="deleteComment"
+                                style="background-color: transparent; border: 0; outline: 0; color: red">삭제</button>
+                            &nbsp;|&nbsp;
+
+                           <button type="button" th:id="updateComment" th:value="${subComment.id}" class="updateComment"
+                                   style="background-color: transparent; border: 0; outline: 0; color: red">수정</button>
+                    </span>
+                            <br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="word-wrap:break-word;"
+                                                                       th:text="${subComment.comment}"
+                                                                       th:id="commentText + ${subComment.id}"></span>
+                            <br>
+                        </div>
+
+
+                    </th:block>
+
+                    <!-- 대댓글 입력-->
+                    <div class="input-group mb-3" style="display: none" th:id="reCommentDiv + ${comment.id}">
+                        <input type="text" class="form-control" th:id="recommentValue + ${comment.id}"
+                               name="commentUpdate">
+                        <button class="reCommentButton" th:value="${comment.id}" type="button"
+                                th:id="reCommentButton+${comment.id}">답글
+                        </button>
+                    </div>
+
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+
+</div>
+</body>
+</html>

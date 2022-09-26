@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:fragment="headerFragment(activeTab)">
+    <header>
+        <div class="jumbotron jumbotron-fluid bg-dark">
+            <div class="container banner" style="color:ivory">
+                <h1 class="lead">&#8220;자유게시판 <br/>자유롭게 작성해주세요..&#8221;
+                </h1>
+                <p>– </p>
+            </div>
+        </div>
+
+        <!-- 네비게이션 바 -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="/" th:href="@{/}">My Board</a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item" th:classappend="${activeTab == 'login'} ? active"
+                        sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/login}">로그인</a>
+                    </li>
+
+
+                    <li class="nav-item" th:classappend="${activeTab == 'signup'} ? active"
+                        sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/signup}">회원가입</a></li>
+
+
+                    <li class="nav-item" th:classappend="${activeTab == 'logout'} ? active"
+                        sec:authorize="isAuthenticated()">
+                        <form class="form-inline" th:action="@{/logout}" th:method="post">
+                            <button class="nav-link btn btn-dark" type="submit">로그아웃</button>
+                        </form>
+                    </li>
+
+
+                    <li class="nav-item" th:classappend="${activeTab == 'free'} ? active">
+                        <a class="nav-link" th:href="@{/board/free}">자유게시판</a></li>
+
+                    <li class="nav-item" th:classappend="${activeTab == 'mypage'} ? active"
+                        th:if="${member != null}" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{'/mypage/' + ${member.email}}">마이페이지</a></li>
+
+                    <li class="nav-item" th:classappend="${activeTab == 'manage'} ? active"
+                        sec:authorize="hasRole('ROLE_MANAGE')">
+                        <a class="nav-link" th:href="@{/manage}">관리자</a></li>
+
+
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+</th:block>
+</header>
+</th:block>
+
+
+<!-- 푸터 -->
+<th:block th:fragment="footerFragment">
+    <footer class="jumbotron jumbotron-fluid text-center banner" style="margin-bottom:0; background-color:#eeeeee">
+
+        <p class="footer-menu-items footer-menu-items-1">INFO</p>
+        <p class="footer-menu-items footer-menu-items-1">SUPPORT</p>
+        <p class="footer-menu-items footer-menu-items-1">CONNECTION</p>
+
+        <br/>
+
+        <p class="footer-menu-items footer-menu-items-2">이용약관</p>
+        <p class="footer-menu-items footer-menu-items-2">&nbsp;&nbsp;|&nbsp;&nbsp;</p>
+        <p class="footer-menu-items footer-menu-items-2">개인정보취급방침</p>
+
+        <p class="footer-menu-items footer-menu-items-3">&copy;김민경</p>
+    </footer>
+</th:block>
+</html>

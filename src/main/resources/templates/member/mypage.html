@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main-layout}" th:with="activeTab='mypage'">
+<head>
+    <script th:src="@{/js.member/mypage.js}"></script>
+</head>
+<body>
+<div layout:fragment="content" class="justify-center-center">
+    <div class="py-5 text-center">
+        <h2>마이 페이지</h2>
+    </div>
+
+    <div style="position: relative; width: 70%; left: 15%;">
+        <h2>내 정보</h2>
+    </div>
+    <div style="position: relative; width: 70%; left: 15%; padding: 25px; border: 1px solid black">
+        <div style="position: relative; width: 70%; left: 15%;">
+
+            <input type="hidden" th:value="${member.id}" th:id="memberId">
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">이메일</span></label>
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" th:value="${member.email}" th:id="email">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">이름</span></label>
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" th:value="${member.name}" th:id="name">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">닉네임</span></label>
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" th:value="${member.nickname}" th:id="nickname">
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-outline-secondary" type="button" th:id="nicknameUpdate">닉네임 변경</button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">핸드폰 번호</span></label>
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <button class="btn btn-outline-secondary" type="button" th:id="telupdate">핸드폰 번호 변경</button>
+                </div>
+            </div>
+
+            <div class="form-group row" style="display: none" th:id="phoneDiv">
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">핸드폰 번호</span></label>
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" th:value="${member.tel}" th:id="tel">
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-outline-secondary" type="button" th:id="sendPhoneNumber">인증번호 보내기</button>
+                </div>
+                <br>
+                <br>
+                <label class="col-sm-2 col-form-label"><span style="font-weight: bold">인증번호</span></label>
+                <input type="hidden" th:name="hidden" th:id="hidden" th:value="aa">
+                <div class="col-sm-1"> |</div>
+                <div class="col-sm-5">
+                    <input type="texdt" class="form-control" th:id="inputCertifiedNumber">
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-outline-secondary" type="button" th:id="checkBtn">핸드폰 번호 수정</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="py-5 text-center">
+            <button th:id="memberDelete" style="background-color: transparent; border: 0; outline: 0;"
+            th:value="${member.id}">
+                <span> 회원탈퇴</span></button>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+
+</body>
+</html>
